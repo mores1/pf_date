@@ -1,0 +1,2 @@
+module SpotCommentsHelper
+end

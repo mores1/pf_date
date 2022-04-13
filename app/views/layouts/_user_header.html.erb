@@ -1,0 +1,40 @@
+<header>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand">テンプデート</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+        
+    <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <%= link_to "Top", root_path, class: 'nav-link' %>
+        </li>
+        <li class="nav-item">
+          <%= link_to "My Page", user_path(current_user), class: 'nav-link' %>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            スポット
+          </a>
+          <div class="dropdown-menu bg-light" aria-labelledby="navbarDropdownMenuLink">
+            <%= link_to "スポット投稿", new_spot_path, class: 'dropdown-item' %>
+            <%= link_to "スポット一覧", spots_path, class: 'dropdown-item' %>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            プラン
+          </a>
+          <div class="dropdown-menu bg-light" aria-labelledby="navbarDropdownMenuLink">
+            <%= link_to "プランを作る!", spots_path, class: 'dropdown-item' %>
+            <%= link_to "プラン一覧", plans_path, class: 'dropdown-item' %>
+          </div>
+        </li>
+        <li class="nav-item">
+          <%= link_to "ログアウト", destroy_user_session_path, method: :delete, class: 'nav-link' %>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</header>

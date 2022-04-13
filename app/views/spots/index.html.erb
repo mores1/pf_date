@@ -1,0 +1,38 @@
+<h1>みんなのスポット</h1>
+
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>スポット名</th>
+      <th>ユーザーネーム</th>
+      <th>詳細</th>
+      <th>評価</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @spots.each do |spot| %>
+        <tr>
+          <th scope="row"></th>
+          <th><%= link_to spot.user.name, spot_path(spot), class: "text-dark" %></th>
+          <td><%= spot.title %></td>
+          <td><%= spot.body %></td>
+          <td>
+              <div id="star-rate<%= spot.id %>"></div>   
+                <script>
+                $('#star-rate<%= spot.id %>').empty();
+                  $('#star-rate<%= spot.id %>').raty({
+                    size      : 36,
+                    starOff:  '<%= asset_path('star-off.png') %>',
+                    starOn : '<%= asset_path('star-on.png') %>',
+                    half      : false,
+                    readOnly: true,
+                    score: <%= spot.star %>
+                  });
+                </script>
+              </td>
+        </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -1,0 +1,2 @@
+class SpotCommentsController < ApplicationController
+end
