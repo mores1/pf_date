@@ -1,2 +1,61 @@
-<h1>Users#show</h1>
-<p>Find me in app/views/users/show.html.erb</p>
+<div class="container-fluid">
+  <div class="row offset-md-2">
+    <h4 class="mb-4"><mark class="bg-light">マイページ</mark></h4>
+  </div>
+  <div class="form-group row ml-3">
+    <h4 class ="ml-3">
+      <strong>登録情報</strong>
+    </h4>
+    <div class="col-2 ml-4">
+      <%= link_to "編集する", edit_user_path(@user), class: "btn btn-success form-control"%>
+    </div>
+  </div>
+
+  <table class="table table-bordered">
+    <tbody>
+      <tr>
+        <th>ユーザーネーム</th>
+        <th><%= @user.name %></th>
+      </tr>
+      <tr>
+        <th>Email</th>
+        <th><%= @user.email %></th>
+      </tr>
+    </tbody>
+  </table>
+
+  <table class="table">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>スポット名</th>
+      <th>詳細</th>
+      <th>評価</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @spots.each do |spot| %>
+        <tr>
+          <th scope="row"></th>
+          <td><%= spot.title %></td>
+          <td><%= spot.body %></td>
+          <td>
+              <div id="star-rate<%= spot.id %>"></div>
+                <script>
+                $('#star-rate<%= spot.id %>').empty();
+                  $('#star-rate<%= spot.id %>').raty({
+                    size      : 36,
+                    starOff:  '<%= asset_path('star-off.png') %>',
+                    starOn : '<%= asset_path('star-on.png') %>',
+                    half      : false,
+                    readOnly: true,
+                    score: <%= spot.star %>
+                  });
+                </script>
+              </td>
+        </tr>
+    <% end %>
+  </tbody>
+</table>
+
+</div>

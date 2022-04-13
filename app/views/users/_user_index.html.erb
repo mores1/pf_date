@@ -1,0 +1,26 @@
+<div class="container">
+  <div class="row mt-2 mb-3">
+    <div class="col-3">
+      <h3><mark class="bg-light">ユーザー一覧</mark></h3>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-10 offset-1">
+    <table class="table">
+      <thead>
+        <tr class="table-secondary">
+          <th>ユーザーネーム</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% users.each do |user| %>
+          <tr>
+            <td><u><%= link_to user.name, user_path(user), class: "text-dark" %></u></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

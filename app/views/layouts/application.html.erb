@@ -11,6 +11,11 @@
   </head>
 
   <body>
+    <% if user_signed_in? %>
+      <%= render 'layouts/user_header' %>
+    <% else %>
+      <%= render 'layouts/gest_header' %>
+    <% end %>
     <%= yield %>
   </body>
 </html>

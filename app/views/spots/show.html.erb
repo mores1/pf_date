@@ -1,2 +1,43 @@
-<h1>Spots#show</h1>
-<p>Find me in app/views/spots/show.html.erb</p>
+<div class="container">
+  <div class="row mt-2 mb-3">
+    <div class="col-3">
+      <h3><mark class="bg-light">スポット詳細</mark></h3>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-10 offset-1">
+    <table class="table">
+      <thead>
+        <tr class="table-secondary">
+          <th>投稿者</th>
+          <th>スポット名</th>
+          <th>詳細</th>
+          <th>おすすめ度</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><u><%= link_to @spot.user.name, user_path(@spot.user), class: "text-dark" %></u></td>
+          <td><%= @spot.title %></td>
+          <td><%= @spot.body %></td>
+          <td>
+            <div id="star-rate<%= @spot.id %>"></div>
+              <script>
+                $('#star-rate<%= @spot.id %>').empty();
+                $('#star-rate<%= @spot.id %>').raty({
+                  size      : 36,
+                  starOff:  '<%= asset_path('star-off.png') %>',
+                  starOn : '<%= asset_path('star-on.png') %>',
+                  half      : false,
+                  readOnly: true,
+                  score: <%= @spot.star %>
+                });
+              </script>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

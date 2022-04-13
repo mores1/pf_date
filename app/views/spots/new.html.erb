@@ -1,2 +1,94 @@
-<h1>Spots#new</h1>
-<p>Find me in app/views/spots/new.html.erb</p>
+<h1><%= @user.name %>イチオシスポットを投稿しよう！</h1>
+
+<%= form_with model: Spot.new do |f| %>
+
+  <h2>gmap</h2>
+
+  <!-- 地名入力用のinputを追加 -->
+  <input id="address" type="textbox" value="東京">
+
+  <!-- buttonをクリックしたらcodeAddressを実行　-->
+  <input type="button" value="Encode" onclick="codeAddress()">
+  <div id ="display">緯度経度</div>
+  <div id='map'>
+  </div>
+
+  <style>
+  #map{
+    height: 350px; width: 350px;
+  }
+  </style>
+
+  <script>
+  /*
+  mapを関数の外で定義(codeAddressでも使うため)
+  geocoderを用意
+  */
+
+  let map
+  let geocoder
+
+  const display = document.getElementById('display')
+
+  function initMap(){
+  // geocoderを初期化
+    geocoder = new google.maps.Geocoder()
+
+    map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: 35.6803997, lng: 139.7690174},
+    zoom: 12
+    });
+  }
+
+  function codeAddress(){
+    // 入力を取得
+    let inputAddress = document.getElementById('address').value;
+
+    // geocodingしたあとmapを移動
+    geocoder.geocode( { 'address': inputAddress}, function(results, status) {
+      if (status == 'OK') {
+　　　　　　　　　　　　// map.setCenterで地図が移動
+        map.setCenter(results[0].geometry.location);
+
+　　　　　　　　　　　　// google.maps.MarkerでGoogleMap上の指定位置にマーカが立つ
+        var marker = new google.maps.Marker({
+            map: map,
+            position: results[0].geometry.location
+        });
+
+        // dispralに緯度経度結果を送る
+        display.textContent = "検索結果：" + results[ 0 ].geometry.location
+
+      } else {
+        alert('該当結果がありません...: ' + status);
+      }
+    });
+  }
+  </script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCM8-Qn5UBKZm7WOY1mnp43c3tMOHelJ2A&callback=initMap" async defer></script>
+
+
+  <div  id="star">
+    <%= f.label :star,'評価 ', class:'col-md-3 col-form-label' %><br>
+    <%= f.hidden_field :star, id: :review_star %>
+  </div>
+  
+  <h4>スポット名</h4>
+  <%= f.text_field :title %>
+  <h4>詳細</h4>
+  <%= f.text_area :body %>
+  <%= f.submit '添付デート', class: 'btn btn-sm btn-primary' %>
+  
+  <!-- 評価javascript -->
+  <script>
+  $('#star').empty();
+  $('#star').raty({
+    size     : 36,
+    starOff:  '<%= asset_path('star-off.png') %>',
+    starOn : '<%= asset_path('star-on.png') %>',
+    scoreName: 'spot[star]',
+    half: false,
+  });
+  </script>
+  
+<% end %>
