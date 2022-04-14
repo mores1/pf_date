@@ -28,7 +28,7 @@ class SpotsController < ApplicationController
   protected
   
   def spot_params
-    params.require(:spot).permit(:user_id, :title, :body, :address, :latitude, :longitude, :star)
+    params.require(:spot).permit(:user_id, :title, :body, :address, :lat, :lng, :star, :image_id)
   end
   
 end
