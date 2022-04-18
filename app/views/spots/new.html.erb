@@ -10,6 +10,8 @@
     <%= f.text_field :title %>
     <h4>詳細</h4>
     <%= f.text_area :body %>
+    <%= f.label :tag_list,"タグを「,」で区切って入力してください" %>
+    <%= f.text_field :tag_list, value: @spot.tag_list.join(',') %>
     <%= f.label :lat,"緯度" %>
     <%= f.text_field :lat,:value =>"緯度", id: :lat %>
     <%= f.label :lng,"経度" %>
@@ -33,11 +35,11 @@
 
   <%= f.submit '添付デート', class: 'btn btn-sm btn-primary' %>
   </div>
-  
+
   <% end %>
-  
+
 <h2>マップ</h2>
-<input id="address" type="textbox" value="GeekSalon">
+<input id="address" type="textbox" placeholder="スポットを入力して下さい">
 <input type="button" value="検索" onclick="codeAddress()">
 <p>マーカーをドラック＆ドロップで位置の調整ができます。<p>
 <div id='map'></div>
@@ -99,10 +101,11 @@ function codeAddress(){
     } else {
       alert('該当する結果がありませんでした：' + status);
     }
-  });   
+  });
 }
 
 </script>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCM8-Qn5UBKZm7WOY1mnp43c3tMOHelJ2A&callback=initMap" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=<%= ENV['MAP_KEY'] %>&callback=initMap" async defer></script>
+
 

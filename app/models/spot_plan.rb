@@ -1,0 +1,2 @@
+class SpotPlan < ApplicationRecord
+end

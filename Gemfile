@@ -61,3 +61,6 @@ group :production do
 end
 
 gem 'devise'
+gem 'acts-as-taggable-on', '~> 8.0'
+gem 'kaminari','~> 1.2.1'
+gem 'ransack'

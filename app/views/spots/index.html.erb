@@ -1,95 +1,293 @@
 <h1>みんなのスポット</h1>
 
-<div id='map'></div>
-
-<style>
-#map {
-  height: 600px;
-  width: 50%;
-}
-</style>
-
-<!-- js部分 -->
-<script>
-    function initMap() {
-
-      //初期表示位置
-      let latlng = new google.maps.LatLng(38.60, 139.5);
-      //デザイン
-      let styles = [
-           {
-            stylers: [
-             { "saturation": 0 },
-             { "lightness": 0 }
-            ]
-           }
-          ];
-
-      let map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 5,
-          styles: styles,
-          center: latlng
-      });
-      let transitLayer = new google.maps.TransitLayer();
-      transitLayer.setMap(map);
-
-      //複数マーカー ここから
-      <% @spots.each do |spot|%>
-        ( function() { 
-          let markerLatLng = new google.maps.LatLng({lat: <%= spot.lat %>, lng: <%= spot.lng %>}); // 緯度経度のデータ作成
-          let marker = new google.maps.Marker({ 
-            position: markerLatLng, 
-            map: map 
-          });
-    　　　//マーカーをクリックしたとき、詳細情報を表示
-          let infowindow = new google.maps.InfoWindow({
-            position: markerLatLng,
-            content: "<a href='<%= spot_path(spot) %>' target='_blank'><%= spot.title %></a>"
-          }); //ここで詳細ページへのリンクを表示させる
-          marker.addListener('click', function() {
-            infowindow.open(map, marker);
-          });
-
-       })();
-      <% end %>
-      //複数マーカー ここまで  
-  }
-</script>
- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCM8-Qn5UBKZm7WOY1mnp43c3tMOHelJ2A&callback=initMap" async defer></script>
 
 
 
+ <script src="https://maps.googleapis.com/maps/api/js?key=<%= ENV['MAP_KEY'] %>&callback=initMap" async defer></script>
 
-
-
-
-
+<div class="tag-form">
+  <% if @tags.present? %>
+    <% @tags.each do |tag| %>
+      <%= link_to "#{tag.name}(#{tag.taggings_count})", spots_path(tag: tag.name) %>
+    <% end %>
+  <% else %>
+    <p>タグはありません</p>
+  <% end %>
+</div>
 
     <div class="spots d-flex flex-wrap align-content-stretch">
-      <% @spots.each do |spot| %>
-        <div class="spot-box card border-0 w-25 p-3 m-3 bg-warning">
-          <%= link_to spot_path(spot) do %>
-            <div class="card-body">
-                <p class="card-text text-dark"><%= spot.title %></p>
-            </div>
-            <%= image_tag spot.get_image_id, size: "100x100", class: "card-img" %>
-            <div class="card-body">
-              <p class="card-text text-dark">ユーザー名:<%= spot.user.name %></p>
-              <p class="card-text text-dark"><%= spot.body %></p>
-              <div id="star-rate<%= spot.id %>"></div>
-              <script>
-                $('#star-rate<%= spot.id %>').empty();
-                $('#star-rate<%= spot.id %>').raty({
-                  size      : 36,
-                  starOff:  '<%= asset_path('star-off.png') %>',
-                  starOn : '<%= asset_path('star-on.png') %>',
-                  half      : false,
-                  readOnly: true,
-                  score: <%= spot.star %>
+      <% if @spot.present? %>
+        <h1>タグに関する投稿</h1>
+
+        <div id='map'></div>
+
+          <style>
+          #map {
+            height: 600px;
+            width: 50%;
+          }
+          </style>
+
+          <!-- js部分 -->
+          <script>
+              function initMap() {
+
+                //初期表示位置
+                let latlng = new google.maps.LatLng(38.60, 139.5);
+                //デザイン
+                let styles = [
+                     {
+                      stylers: [
+                       { "saturation": 0 },
+                       { "lightness": 0 }
+                      ]
+                     }
+                    ];
+
+                let map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 5,
+                    styles: styles,
+                    center: latlng
                 });
-              </script>
+                let transitLayer = new google.maps.TransitLayer();
+                transitLayer.setMap(map);
+
+                //複数マーカー ここから
+                <% @spot.each do |spot|%>
+                  ( function() {
+                    let markerLatLng = new google.maps.LatLng({lat: <%= spot.lat %>, lng: <%= spot.lng %>}); // 緯度経度のデータ作成
+                    let marker = new google.maps.Marker({
+                      position: markerLatLng,
+                      map: map
+                    });
+              　　　//マーカーをクリックしたとき、詳細情報を表示
+                    let infowindow = new google.maps.InfoWindow({
+                      position: markerLatLng,
+                      content: "<a href='<%= spot_path(spot) %>' target='_blank'><%= spot.title %></a>"
+                    }); //ここで詳細ページへのリンクを表示させる
+                    marker.addListener('click', function() {
+                      infowindow.open(map, marker);
+                    });
+
+                 })();
+                <% end %>
+                //複数マーカー ここまで
+                  }
+            </script>
+        <!--%= form_with(model: spot_plans, local: true) do |form| %>-->
+        <% @spot.each do |spot| %>
+            <div class="spot-box card border-0 w-25 p-3 m-3 bg-warning">
+              <!--%= form.checkbox %>-->
+              <%= link_to spot_path(spot) do %>
+                <div class="card-body">
+                    <p class="card-text text-dark"><%= spot.title %></p>
+                </div>
+                <%= image_tag spot.get_image_id, size: "100x100", class: "card-img" %>
+                <div class="card-body">
+                  <p class="card-text text-dark">ユーザー名:<%= spot.user.name %></p>
+                  <p class="card-text text-dark"><%= spot.body %></p>
+                  <%= spot.tag_list %>
+                  <div id="star-rate<%= spot.id %>"></div>
+                  <script>
+                    $('#star-rate<%= spot.id %>').empty();
+                    $('#star-rate<%= spot.id %>').raty({
+                      size      : 36,
+                      starOff:  '<%= asset_path('star-off.png') %>',
+                      starOn : '<%= asset_path('star-on.png') %>',
+                      half      : false,
+                      readOnly: true,
+                      score: <%= spot.star %>
+                    });
+                  </script>
+                </div>
+              <% end %>
+
+          </div>
+          <!--%= form.submit %>-->
+        <% end %>
+        <!--% end %>-->
+
+
+
+        <!--ransuck検索結果-->
+        <% elsif @check.present? %>
+
+        <div id='map'></div>
+
+          <style>
+          #map {
+            height: 600px;
+            width: 50%;
+          }
+          </style>
+
+          <!-- js部分 -->
+          <script>
+              function initMap() {
+
+                //初期表示位置
+                let latlng = new google.maps.LatLng(38.60, 139.5);
+                //デザイン
+                let styles = [
+                     {
+                      stylers: [
+                       { "saturation": 0 },
+                       { "lightness": 0 }
+                      ]
+                     }
+                    ];
+
+                let map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 5,
+                    styles: styles,
+                    center: latlng
+                });
+                let transitLayer = new google.maps.TransitLayer();
+                transitLayer.setMap(map);
+
+                //複数マーカー ここから
+                <% @search_spots.each do |spot|%>
+                  ( function() {
+                    let markerLatLng = new google.maps.LatLng({lat: <%= spot.lat %>, lng: <%= spot.lng %>}); // 緯度経度のデータ作成
+                    let marker = new google.maps.Marker({
+                      position: markerLatLng,
+                      map: map
+                    });
+              　　　//マーカーをクリックしたとき、詳細情報を表示
+                    let infowindow = new google.maps.InfoWindow({
+                      position: markerLatLng,
+                      content: "<a href='<%= spot_path(spot) %>' target='_blank'><%= spot.title %></a>"
+                    }); //ここで詳細ページへのリンクを表示させる
+                    marker.addListener('click', function() {
+                      infowindow.open(map, marker);
+                    });
+
+                 })();
+                <% end %>
+                //複数マーカー ここまで
+                  }
+            </script>
+        <% @search_spots.each do |spot| %>
+            <div class="spot-box card border-0 w-25 p-3 m-3 bg-warning">
+              <input type='checkbox'　name='boxes[]'>
+              <%= link_to spot_path(spot) do %>
+                <div class="card-body">
+                    <p class="card-text text-dark"><%= spot.title %></p>
+                </div>
+                <%= image_tag spot.get_image_id, size: "100x100", class: "card-img" %>
+                <div class="card-body">
+                  <p class="card-text text-dark">ユーザー名:<%= spot.user.name %></p>
+                  <p class="card-text text-dark"><%= spot.body %></p>
+                  <%= spot.tag_list %>
+                  <div id="star-rate<%= spot.id %>"></div>
+                  <script>
+                    $('#star-rate<%= spot.id %>').empty();
+                    $('#star-rate<%= spot.id %>').raty({
+                      size      : 36,
+                      starOff:  '<%= asset_path('star-off.png') %>',
+                      starOn : '<%= asset_path('star-on.png') %>',
+                      half      : false,
+                      readOnly: true,
+                      score: <%= spot.star %>
+                    });
+                  </script>
+                </div>
+              <% end %>
+
+          </div>
+        <% end %>
+
+
+
+
+
+
+
+      <% else %>
+      <div id='map'></div>
+
+    <style>
+    #map {
+      height: 600px;
+      width: 50%;
+    }
+    </style>
+
+    <!-- js部分 -->
+    <script>
+        function initMap() {
+
+          //初期表示位置
+          let latlng = new google.maps.LatLng(38.60, 139.5);
+          //デザイン
+          let styles = [
+               {
+                stylers: [
+                 { "saturation": 0 },
+                 { "lightness": 0 }
+                ]
+               }
+              ];
+
+          let map = new google.maps.Map(document.getElementById('map'), {
+              zoom: 5,
+              styles: styles,
+              center: latlng
+          });
+          let transitLayer = new google.maps.TransitLayer();
+          transitLayer.setMap(map);
+
+          //複数マーカー ここから
+          <% @spots.each do |spot|%>
+            ( function() {
+              let markerLatLng = new google.maps.LatLng({lat: <%= spot.lat %>, lng: <%= spot.lng %>}); // 緯度経度のデータ作成
+              let marker = new google.maps.Marker({
+                position: markerLatLng,
+                map: map
+              });
+        　　　//マーカーをクリックしたとき、詳細情報を表示
+              let infowindow = new google.maps.InfoWindow({
+                position: markerLatLng,
+                content: "<a href='<%= spot_path(spot) %>' target='_blank'><%= spot.title %></a>"
+              }); //ここで詳細ページへのリンクを表示させる
+              marker.addListener('click', function() {
+                infowindow.open(map, marker);
+              });
+
+                 })();
+                <% end %>
+                //複数マーカー ここまで
+            }
+          </script>
+            <% @spots.each do |spot| %>
+              <div class="spot-box card border-0 w-25 p-3 m-3 bg-warning">
+                <input type='checkbox'　name='boxes[]'>
+                <%= link_to spot_path(spot) do %>
+                  <div class="card-body">
+                      <p class="card-text text-dark"><%= spot.title %></p>
+                  </div>
+                  <%= image_tag spot.get_image_id, size: "100x100", class: "card-img" %>
+                  <div class="card-body">
+                    <p class="card-text text-dark">ユーザー名:<%= spot.user.name %></p>
+                    <p class="card-text text-dark"><%= spot.body %></p>
+                    <%= spot.tag_list %>
+                    <div id="star-rate<%= spot.id %>"></div>
+                    <script>
+                      $('#star-rate<%= spot.id %>').empty();
+                      $('#star-rate<%= spot.id %>').raty({
+                        size      : 36,
+                        starOff:  '<%= asset_path('star-off.png') %>',
+                        starOn : '<%= asset_path('star-on.png') %>',
+                        half      : false,
+                        readOnly: true,
+                        score: <%= spot.star %>
+                      });
+                    </script>
+                  </div>
+                <% end %>
+
             </div>
           <% end %>
-        </div>
       <% end %>
     </div>
+<%= paginate @spots %>
