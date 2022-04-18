@@ -9,7 +9,8 @@ Rails.application.routes.draw do
   end
 
   resources :spots do
-    resource :spot_comments, only: [:create, :destroy]
+    resources :spot_comments, only: [:create, :destroy]
+    get 'search' => 'spots#search'
   end
 
   resources :plans, only: [:index, :show, :edit, :update, :destroy]

@@ -6,56 +6,51 @@
     <h4 class ="ml-3">
       <strong>登録情報</strong>
     </h4>
+    <table class="table table-bordered">
+      <tbody>
+        <tr>
+          <th>ユーザーネーム</th>
+          <th><%= @user.name %></th>
+        </tr>
+        <tr>
+          <th>Email</th>
+          <th><%= @user.email %></th>
+        </tr>
+      </tbody>
+    </table>
     <div class="col-2 ml-4">
       <%= link_to "編集する", edit_user_path(@user), class: "btn btn-success form-control"%>
     </div>
   </div>
 
-  <table class="table table-bordered">
-    <tbody>
-      <tr>
-        <th>ユーザーネーム</th>
-        <th><%= @user.name %></th>
-      </tr>
-      <tr>
-        <th>Email</th>
-        <th><%= @user.email %></th>
-      </tr>
-    </tbody>
-  </table>
-
-  <table class="table">
-  <thead>
-    <tr>
-      <th>#</th>
-      <th>スポット名</th>
-      <th>詳細</th>
-      <th>評価</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @spots.each do |spot| %>
-        <tr>
-          <th scope="row"></th>
-          <td><%= spot.title %></td>
-          <td><%= spot.body %></td>
-          <td>
+  
+  <div class="spots d-flex flex-wrap align-content-stretch">
+      <% @spots.each do |spot| %>
+        <div class="spot-box card border-0 w-25 p-3 m-3 bg-warning">
+          <%= link_to spot_path(spot) do %>
+            <div class="card-body">
+                <p class="card-text text-dark"><%= spot.title %></p>
+            </div>
+            <%= image_tag spot.get_image_id, size: "100x100", class: "card-img" %>
+            <div class="card-body">
+              <p class="card-text text-dark">ユーザー名:<%= spot.user.name %></p>
+              <p class="card-text text-dark"><%= spot.body %></p>
               <div id="star-rate<%= spot.id %>"></div>
-                <script>
+              <script>
                 $('#star-rate<%= spot.id %>').empty();
-                  $('#star-rate<%= spot.id %>').raty({
-                    size      : 36,
-                    starOff:  '<%= asset_path('star-off.png') %>',
-                    starOn : '<%= asset_path('star-on.png') %>',
-                    half      : false,
-                    readOnly: true,
-                    score: <%= spot.star %>
-                  });
-                </script>
-              </td>
-        </tr>
-    <% end %>
-  </tbody>
-</table>
-
+                $('#star-rate<%= spot.id %>').raty({
+                  size      : 36,
+                  starOff:  '<%= asset_path('star-off.png') %>',
+                  starOn : '<%= asset_path('star-on.png') %>',
+                  half      : false,
+                  readOnly: true,
+                  score: <%= spot.star %>
+                });
+              </script>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  
 </div>

@@ -2,93 +2,110 @@
 
 <%= form_with model: Spot.new do |f| %>
 
-  <h2>gmap</h2>
 
-  <!-- 地名入力用のinputを追加 -->
-  <input id="address" type="textbox" value="東京">
-
-  <!-- buttonをクリックしたらcodeAddressを実行　-->
-  <input type="button" value="Encode" onclick="codeAddress()">
-  <div id ="display">緯度経度</div>
-  <div id='map'>
-  </div>
-
-  <style>
-  #map{
-    height: 350px; width: 350px;
-  }
-  </style>
+  <div class="actions">
+    <h4>画像</h4>
+    <%= f.file_field :image_id, accept: "image/*" %>
+    <h4>タイトル</h4>
+    <%= f.text_field :title %>
+    <h4>詳細</h4>
+    <%= f.text_area :body %>
+    <%= f.label :tag_list,"タグを「,」で区切って入力してください" %>
+    <%= f.text_field :tag_list, value: @spot.tag_list.join(',') %>
+    <%= f.label :lat,"緯度" %>
+    <%= f.text_field :lat,:value =>"緯度", id: :lat %>
+    <%= f.label :lng,"経度" %>
+    <%= f.text_field :lng,:value =>"経度", id: :lng %>
+    <div  id="star">
+      <%= f.label :star,'評価 ', class:'col-md-3 col-form-label' %><br>
+      <%= f.hidden_field :star, id: :review_star %>
+    </div>
 
   <script>
-  /*
-  mapを関数の外で定義(codeAddressでも使うため)
-  geocoderを用意
-  */
-
-  let map
-  let geocoder
-
-  const display = document.getElementById('display')
-
-  function initMap(){
-  // geocoderを初期化
-    geocoder = new google.maps.Geocoder()
-
-    map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: 35.6803997, lng: 139.7690174},
-    zoom: 12
+    $('#star').empty();
+    $('#star').raty({
+      size     : 36,
+      starOff:  '<%= asset_path('star-off.png') %>',
+      starOn : '<%= asset_path('star-on.png') %>',
+      scoreName: 'spot[star]',
+      half: false,
     });
-  }
+  </script>
+  <!-- 評価javascript -->
 
-  function codeAddress(){
-    // 入力を取得
-    let inputAddress = document.getElementById('address').value;
+  <%= f.submit '添付デート', class: 'btn btn-sm btn-primary' %>
+  </div>
 
-    // geocodingしたあとmapを移動
-    geocoder.geocode( { 'address': inputAddress}, function(results, status) {
-      if (status == 'OK') {
-　　　　　　　　　　　　// map.setCenterで地図が移動
+  <% end %>
+
+<h2>マップ</h2>
+<input id="address" type="textbox" placeholder="スポットを入力して下さい">
+<input type="button" value="検索" onclick="codeAddress()">
+<p>マーカーをドラック＆ドロップで位置の調整ができます。<p>
+<div id='map'></div>
+
+<style>
+#map {
+  height: 350px;
+  width: 350px;
+}
+</style>
+
+<script>
+//初期マップの設定
+let map
+let marker
+function initMap(){
+  geocoder = new google.maps.Geocoder()
+
+  map = new google.maps.Map(document.getElementById('map'), {
+    center:  {lat: 35.6803997, lng:139.7690174},  //東京
+    zoom: 15,
+
+  });
+}
+
+//検索後のマップ作成
+let geocoder
+let aft
+function codeAddress(){
+  let inputAddress = document.getElementById('address').value;
+  geocoder.geocode( { 'address': inputAddress}, function(results, status) {
+    if (status == 'OK') {
+        //マーカーが複数できないようにする
+        if (aft == true){
+            marker.setMap(null);
+        }
+
+        //新しくマーカーを作成する
         map.setCenter(results[0].geometry.location);
-
-　　　　　　　　　　　　// google.maps.MarkerでGoogleMap上の指定位置にマーカが立つ
-        var marker = new google.maps.Marker({
+            marker = new google.maps.Marker({
             map: map,
-            position: results[0].geometry.location
+            position: results[0].geometry.location,
+            draggable: true // ドラッグ可能にする
         });
 
-        // dispralに緯度経度結果を送る
-        display.textContent = "検索結果：" + results[ 0 ].geometry.location
+        //二度目以降か判断
+        aft = true
 
-      } else {
-        alert('該当結果がありません...: ' + status);
-      }
-    });
-  }
-  </script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCM8-Qn5UBKZm7WOY1mnp43c3tMOHelJ2A&callback=initMap" async defer></script>
+        //検索した時に緯度経度を入力する
+        document.getElementById('lat').value = results[0].geometry.location.lat();
+        document.getElementById('lng').value = results[0].geometry.location.lng();
 
-
-  <div  id="star">
-    <%= f.label :star,'評価 ', class:'col-md-3 col-form-label' %><br>
-    <%= f.hidden_field :star, id: :review_star %>
-  </div>
-  
-  <h4>スポット名</h4>
-  <%= f.text_field :title %>
-  <h4>詳細</h4>
-  <%= f.text_area :body %>
-  <%= f.submit '添付デート', class: 'btn btn-sm btn-primary' %>
-  
-  <!-- 評価javascript -->
-  <script>
-  $('#star').empty();
-  $('#star').raty({
-    size     : 36,
-    starOff:  '<%= asset_path('star-off.png') %>',
-    starOn : '<%= asset_path('star-on.png') %>',
-    scoreName: 'spot[star]',
-    half: false,
+        // マーカーのドロップ（ドラッグ終了）時のイベント
+        google.maps.event.addListener( marker, 'dragend', function(ev){
+            // イベントの引数evの、プロパティ.latLngが緯度経度
+            document.getElementById('lat').value = ev.latLng.lat();
+            document.getElementById('lng').value = ev.latLng.lng();
+        });
+    } else {
+      alert('該当する結果がありませんでした：' + status);
+    }
   });
-  </script>
-  
-<% end %>
+}
+
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=<%= ENV['MAP_KEY'] %>&callback=initMap" async defer></script>
+
+
