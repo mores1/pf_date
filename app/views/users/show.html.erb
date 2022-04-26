@@ -7,7 +7,9 @@
           通り名: <%= @user.name %>
         </li>
         <li>
-          Mail:<%= @user.email %>
+          <% if @user == current_user %>
+            Mail:<%= @user.email %>
+          <% end %>
         </li>
       </ul>
       <div class="text-right">
