@@ -1,0 +1,103 @@
+<div class ="container">
+  <h1 class="text-center font-weight-bolder"><%= current_user.name %>の作成中特製プラン</h1>
+  <%= form_with model:@plan, url: '/plans/' do |f| %>
+  <div class ="row">
+    <div class="col-7 mt-3">
+      <div id='map'></div>
+    </div>
+    <div class="newplan-form col-5 mt-3">
+      <h4>タイトル</h4><br>
+      <%= f.text_field :title %><br>
+      <h4>プランの概要</h4><br>
+      <%= f.text_area :body %><br>
+      <% if @cart_spots.present? %>
+        <%= f.submit 'テンプデート', class: 'btn btn-sm btn-primary mt-2' %>
+      <% end %>
+      <div class="mt-2 text-center">
+        <p>～スポット詳細から気に入ったスポットを計画に追加しよう!～</p>
+      </div>
+      <%= link_to "スポット選考へ!", spots_path, class: "btn btn-success" %>
+    </div>
+  </div>
+  <div class ="row d-flex justify-content-center">
+    <% @cart_spots.each do |cart_spot| %>
+      <div class="spot-box card border-0 w-25 p-3 m-3">
+        <%= link_to spot_path(cart_spot.spot) do %>
+          <div class="card-body">
+            <p class="spot-title text-dark"><%= cart_spot.spot.title %></p>
+          </div>
+          <%= image_tag cart_spot.spot.get_image_id, size: "100x100", class: "card-img" %>
+          <div class="card-body">
+            <p class="card-text text-dark"><%= cart_spot.spot.body %></p>
+          </div>
+        <% end %>
+        <div id="star-rate<%= cart_spot.spot.id %>"></div>
+        <script>
+          $('#star-rate<%= cart_spot.spot.id %>').empty();
+          $('#star-rate<%= cart_spot.spot.id %>').raty({
+            size      : 25,
+            starOff:  '<%= asset_path('star-off.png') %>',
+            starOn : '<%= asset_path('star-on.png') %>',
+            half      : false,
+            readOnly: true,
+            score: <%= cart_spot.spot.star %>
+            });
+        </script>
+        <p class="card-text text-dark">by <%= cart_spot.spot.user.name %></p>
+        <%= link_to "計画から外す", cart_spot_path(cart_spot), method: :delete, class: "btn btn-danger" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<style>
+  #map {
+    height: 500px;
+    width: 500px;
+  }
+</style>
+
+<!-- js部分 -->
+<script>
+  function initMap() {
+  //初期表示位置
+  let latlng = new google.maps.LatLng(38.60, 139.5);
+  //デザイン
+  let styles = [
+    {
+    stylers: [
+      { "saturation": 0 },
+      { "lightness": 0 }
+      ]
+       }
+      ];
+  let map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 5,
+    styles: styles,
+    center: latlng
+  });
+  let transitLayer = new google.maps.TransitLayer();
+    transitLayer.setMap(map);
+    //複数マーカー ここから
+    <% @cart_spots.each do |cart_spot|%>
+    ( function() {
+    let markerLatLng = new google.maps.LatLng({lat: <%= cart_spot.spot.lat %>, lng: <%= cart_spot.spot.lng %>}); // 緯度経度のデータ作成
+    let marker = new google.maps.Marker({
+      position: markerLatLng,
+      map: map
+    });
+  　//マーカーをクリックしたとき、詳細情報を表示
+    let infowindow = new google.maps.InfoWindow({
+      position: markerLatLng,
+      content: "<a href='<%= spot_path(cart_spot.spot) %>' target='_blank'><%= cart_spot.spot.title %></a>"
+    }); //ここで詳細ページへのリンクを表示させる
+      marker.addListener('click', function() {
+      infowindow.open(map, marker);
+    });
+    })();
+  <% end %>
+  //複数マーカー ここまで
+  }
+</script>
+<% end %>
+<script src="https://maps.googleapis.com/maps/api/js?key=<%= ENV['MAP_KEY'] %>&callback=initMap" async defer></script>

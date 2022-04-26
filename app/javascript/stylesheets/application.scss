@@ -1,2 +1,173 @@
 @import '~bootstrap/scss/bootstrap';
 @import '~@fortawesome/fontawesome-free/scss/fontawesome';
+@import url('https://fonts.googleapis.com/css2?family=Kosugi+Maru&display=swap');
+@import 'https://fonts.googleapis.com/earlyaccess/nicomoji.css';
+@import 'https://fonts.googleapis.com/css2?family=Hachi+Maru+Pop&display=swap';
+
+
+header{
+  background-color: #ffa800;
+  font-weight: bold;
+}
+
+body{
+  height: 100vh;
+  font-family: 'Hachi Maru Pop', cursive;
+  color: #111111;
+  display: flex;
+  flex-direction: column;
+}
+
+.top{
+  text-align: center;
+  height: 100vh;
+}
+
+.top-text{
+  margin-top: 15vh;
+  height: 30vh;
+  font-size: 7rem;
+  font-family: "Nico Moji";
+}
+
+.spot-box{
+  background-color: #faf68a;
+  text-align: center;
+  border-radius: 20px;
+}
+
+
+ul.spot-tag li {
+  position: relative;
+  list-style-type: none!important;
+  padding: 0.5em 0.5em 0.5em 0.5em;
+  margin-bottom: 5px;
+  line-height: 1.5;
+  background: #ffdbff;
+  vertical-align: middle;
+  color: #ff89ff;
+  border-radius: 15px;
+}
+
+ul.spot-tag a {
+  color: #bc18c7;
+  background: #ffdbff;
+  border-radius: 15px;
+}
+
+.show-tag a{
+  color: #f163bf;
+  border-radius: 15px;
+}
+
+.card-img{
+  border-radius: 20px;
+}
+
+#map{
+  border-radius: 30px;
+}
+
+ul.spot-comment li{
+  position: relative;
+  list-style-type: none!important;
+  padding: 0.5em 0.5em 0.5em 0.5em;
+  margin-bottom: 5px;
+  line-height: 1.5;
+  background: #ffdbff;
+  vertical-align: middle;
+  color: black;
+  border-radius: 15px;
+  left: -25px;
+}
+
+ul.spot-comment li:before{
+  content: '';
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  left: -13px;
+  top: 40px;
+  border-right: 15px solid #ffdbff;
+  border-top: 15px solid transparent;
+}
+
+.pagination {
+  justify-content: center;
+}
+
+.plan-box{
+  background-color: #92d2ef;
+  text-align: center;
+  border-radius: 20px;
+}
+
+.plan-box a{
+  color: black;
+}
+
+.my-form{
+  margin: auto;
+}
+
+.my-box{
+  position: relative;
+  list-style-type: none!important;
+  padding: 0.5em 0.5em 0.5em 0.5em;
+  margin-bottom: 5px;
+  line-height: 1.5;
+  background: #ffdbff;
+  vertical-align: middle;
+  color: black;
+  border-radius: 15px;
+}
+
+ul.user-list li {
+  position: relative;
+  list-style-type: none!important;
+  padding: 0.5em 0.5em 0.5em 0.5em;
+  margin-bottom: 5px;
+  line-height: 1.5;
+  background: #c3f7fa;
+  vertical-align: middle;
+  color: #c3f7fa;
+  border-radius: 15px;
+}
+
+.user-box{
+  margin: auto;
+}
+
+ul.user-list a {
+  color: #3b31ce;
+  background: #c3f7fa;
+  border-radius: 15px;
+}
+
+.search-form{
+  border-radius: 13px;
+}
+
+.search-btn{
+  border-radius: 50%;
+}
+
+.search-btn:hover{
+  border-bottom-color: transparent;
+	transform: translateY(0.1875em);
+}
+
+footer{
+  background-color: #ffa800;
+  width: 100%;
+  margin-top: auto;
+}
+
+footer p {
+  margin: 1em;
+}
+
+p.spot-title {
+  font-weight: bold;
+}

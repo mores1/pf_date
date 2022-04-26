@@ -1,0 +1,7 @@
+<ul class = "spot-tag">
+  <% @tags.each do |tag| %>
+    <%= link_to spots_path(tag: tag.name) do %>
+      <i class="fas fa-tag"></i> <%= "#{tag.name}(#{tag.taggings_count})" %>
+    <% end %>
+  <% end %>
+</ul>
