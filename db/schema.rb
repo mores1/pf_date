@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_17_073050) do
+ActiveRecord::Schema.define(version: 2022_04_20_114018) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -40,9 +40,15 @@ ActiveRecord::Schema.define(version: 2022_04_17_073050) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "plans", force: :cascade do |t|
+  create_table "cart_spots", force: :cascade do |t|
     t.integer "user_id"
     t.integer "spot_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "plans", force: :cascade do |t|
+    t.integer "user_id"
     t.string "title"
     t.text "body"
     t.datetime "created_at", precision: 6, null: false
@@ -60,9 +66,6 @@ ActiveRecord::Schema.define(version: 2022_04_17_073050) do
   create_table "spot_plans", force: :cascade do |t|
     t.integer "spot_id"
     t.integer "plan_id"
-    t.integer "user_id"
-    t.string "title"
-    t.text "body"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

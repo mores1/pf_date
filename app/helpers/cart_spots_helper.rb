@@ -1,0 +1,2 @@
+module CartSpotsHelper
+end

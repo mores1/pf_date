@@ -1,6 +1,11 @@
 <header>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand">テンプデート</a>
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <a class="navbar-brand">
+      <%= link_to root_path do%>
+        <%= image_tag 'pf_logo', size: "70x70", class: "mr-2 rounded-circle" %>
+      <% end %>
+    </a>
+    <p class="ml-5">～イケてるあなたが投稿を、怠惰なあなたにキッカケを～</p>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -15,15 +20,6 @@
         </li>
         <li class="nav-item">
           <%= link_to "ログイン", new_user_session_path, class: 'nav-link' %>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            投稿を見る!
-          </a>
-          <div class="dropdown-menu bg-light" aria-labelledby="navbarDropdownMenuLink">
-            <%= link_to "スポット一覧", spots_path, class: 'dropdown-item' %>
-            <%= link_to "プラン一覧", plans_path, class: 'dropdown-item' %>
-          </div>
         </li>
       </ul>
     </div>

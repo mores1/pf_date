@@ -1,2 +1,18 @@
-<h1>Plans#index</h1>
-<p>Find me in app/views/plans/index.html.erb</p>
+<div class="container">
+  <h1 class="text-center font-weight-bolder">みんなのプラン</h1>
+  <p class="text-center">気になるプラン選んで詳細を確認しよう!</p>
+  <div class="row d-flex justify-content-center">
+    <% @plans.each do |plan| %>
+      <div class="plan-box card border-0 w-25 m-2">
+        <%= link_to plan_path(plan) do %>
+          <div class="card-body">
+            <h7 class="font-weight-bolder"><%= plan.title %></h7><br>
+            <p><%= plan.body %></p>
+            <p>by <%= plan.user.name %></p>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+  <%= paginate @plans %>
+</div>

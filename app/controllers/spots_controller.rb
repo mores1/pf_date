@@ -7,16 +7,18 @@ class SpotsController < ApplicationController
   def create
     @spot = Spot.new(spot_params)
     @spot.user_id = current_user.id
-    if @spot.save
+    if @spot.lat == 0 || @spot.lng == 0
+      redirect_to request.referer
+    elsif @spot.save
       redirect_to spots_path
     else
-      redirect_to user_path(@user)
+      redirect_to request.referer
     end
   end
 
   def index
     @spots = Spot.all.page(params[:page]).per(6)
-    @tags = Spot.tag_counts_on(:tags).order('count DESC')
+    @tags = Spot.tag_counts_on(:tags, limit: 10).order('count DESC')
     if @tag = params[:tag]
       @spot = Spot.tagged_with(params[:tag])
     end
@@ -26,14 +28,14 @@ class SpotsController < ApplicationController
     @spot = Spot.find(params[:id])
     @tags = @spot.tag_counts_on(:tags)
     @spot_comment = SpotComment.new
-    
+
   end
 
   def edit
     @spot = Spot.find(params[:id])
     @tags = @spot.tag_counts_on(:tags)
   end
-  
+
   def update
     @spot = Spot.find(params[:id])
     if @spot.update(spot_params)
@@ -42,7 +44,7 @@ class SpotsController < ApplicationController
       render :edit
     end
   end
-  
+
   def destroy
     @spot = Spot.find(params[:id])
     if @spot.destroy
@@ -51,16 +53,16 @@ class SpotsController < ApplicationController
       render :show
     end
   end
-  
-  def search
-    @results = @q.result.includes(:user)
+
+  def taglist
+    @tags = Spot.tag_counts_on(:tags).order('count DESC')
   end
 
   protected
 
   def spot_params
-    params.require(:spot).permit(:user_id, :title, :body, :address, :lat, :lng, :star, :image_id, :tag_list)
+    params.require(:spot).permit(:user_id, :title, :body, :lat, :lng, :star, :image_id, :tag_list)
   end
-  
-  
+
+
 end

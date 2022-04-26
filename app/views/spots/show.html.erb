@@ -1,34 +1,38 @@
 <div class="container">
-  <div class="row mt-2 mb-3">
-    <div class="col-3">
-      <h3><mark class="bg-light">スポット詳細</mark></h3>
-    </div>
-  </div>
-</div>
+  <h1 class="text-center font-weight-bolder"><%= @spot.title %>詳細</h1>
+  <h5 class="text-right font-weight-bolder">by <%= @spot.user.name %></h5>
 
-<div class="row">
-  <div class="col-10 offset-1">
-    <table class="table">
-      <thead>
-        <tr class="table-secondary">
-          <th>投稿者</th>
-          <th>スポット名</th>
-          <th>詳細</th>
-          <th>おすすめ度</th>
-          <th>画像</th>
-          <th>タグ</th>
-          <th></th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><u><%= link_to @spot.user.name, user_path(@spot.user), class: "text-dark" %></u></td>
-          <td><%= @spot.title %></td>
-          <td><%= @spot.body %></td>
-          <td>
-            <div id="star-rate<%= @spot.id %>"></div>
-              <script>
+  <div class="row">
+    <div class="col-4 mt-3">
+      <%= image_tag @spot.get_image_id, size: "300x300", class:'card-img' %>
+    </div>
+    <div class="col-4 mt-3">
+      <div id='map'></div>
+      <div class="address"></div>
+      <div class="address text-center">
+        緯度:<%= @spot.lat %><br>
+        経度:<%= @spot.lng %>
+      </div>
+
+    </div>
+    <div class="col-4 mt-3">
+      <div class="spot-box card">
+        <div class="card-body">
+          <h5 class="font-weight-bolder">詳細情報</h5>
+          <%= @spot.body %><br>
+          <div class="show-tag">
+            <% if @tags.present? %>
+            <% @tags.each do |tag| %>
+              <%= link_to spots_path(tag: tag.name) do %>
+                <i class="fas fa-tag"></i> <%= "#{tag.name}(#{tag.taggings_count})" %>
+              <% end %>
+            <% end %>
+            <% else %>
+              <p>タグがありません</p>
+            <% end %>
+          </div>
+          <div id="star-rate<%= @spot.id %>"></div>
+          <script>
                 $('#star-rate<%= @spot.id %>').empty();
                 $('#star-rate<%= @spot.id %>').raty({
                   size      : 36,
@@ -39,49 +43,66 @@
                   score: <%= @spot.star %>
                 });
               </script>
-          </td>
-          <td>
-            <%= image_tag @spot.get_image_id, size: "100x100" %>
-          </td>
-          <td>
-            <% if @tags.present? %>
-              <% @tags.each do |tag| %>
-                <%= link_to "#{tag.name}(#{tag.taggings_count})", spots_path(tag: tag.name) %>
-              <% end %>
-            <% else %>
-              <p>タグがありません</p>
-            <% end %>
-          </td>
-          <td><%= link_to "編集", edit_spot_path(@spot), class: 'btn btn-success' %></td>
-          <td><%= link_to "削除", spot_path(@spot), method: :delete, class: 'btn btn-danger' %></td>
-        </tr>
-      </tbody>
-    </table>
-    <div id='map'></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-8">
+      <div>
+        <div class="ml-4">
+          コメント:<%= @spot.spot_comments.count %>件
+        </div>
+        <ul class="spot-comment">
+          <% @spot.spot_comments.each do |spot_comment| %>
+            <li>
+              <%= spot_comment.comment %><br>
+              <div class="text-right mr-2">
+                <%= spot_comment.created_at.strftime('%Y/%m/%d') %>
+                by <%= spot_comment.user.name %>
+                <% if spot_comment.user == current_user || current_user.name == "admin"  %>
+                  <%= link_to "削除", spot_spot_comment_path(spot_comment.spot, spot_comment), method: :delete %>
+                <% end %>
+              </div>
 
-    <div>
-      <p>コメント件数：<%= @spot.spot_comments.count %></p>
-        <% @spot.spot_comments.each do |spot_comment| %>
-          <%= spot_comment.user.name %>
-          <%= spot_comment.created_at.strftime('%Y/%m/%d') %><%= spot_comment.comment %>
-          <% if spot_comment.user == current_user %>
-            <%= link_to "削除", spot_spot_comment_path(spot_comment.spot, spot_comment), method: :delete %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+      <div class="ml-3">
+        <% if current_user.name != "guestuser" %>
+          <%= form_with model: [@spot, @spot_comment] do |f| %>
+            <%= f.text_area :comment, placeholder: "コメントを入力してください" %>
+            <%= f.submit "コメント送信" %>
           <% end %>
         <% end %>
+      </div>
     </div>
-
-    <div>
-      <%= form_with model: [@spot, @spot_comment] do |f| %>
-        <%= f.text_area :comment, placeholder: "コメントを入力してください" %>
-        <%= f.submit "コメント送信" %>
-      <% end %>
+    <div class="col-4 mt-3">
+      <div class="show-btn mt-3 text-center">
+        <div>
+          <%= form_with model: CartSpot.new , url: '/cart_spots/', method: :post, local:true do |f| %>
+          <%= f.hidden_field :spot_id, :value => @spot.id %>
+          <%= f.submit "計画に加える", class: 'btn btn-success' %>
+          <p>ボタンを押してMyプランに加えよう!</p>
+        <% end %>
+        </div>
+        <div class="mt-2 mb-2">
+          <% if @spot.user == current_user || current_user.name == "admin"  %>
+          <%= link_to "編集", edit_spot_path(@spot), class: 'btn btn-success' %>
+          <%= link_to "削除", spot_path(@spot), method: :delete, class: 'btn btn-danger' %>
+          <% end %>
+        </div>
+      </div>
     </div>
+  </div>
+</div>
 
 
     <style>
     #map {
       height: 300px;
-      width: 50%;
+      width: 300px;
     }
     </style>
 

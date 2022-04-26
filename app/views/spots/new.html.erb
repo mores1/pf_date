@@ -1,48 +1,49 @@
-<h1><%= @user.name %>イチオシスポットを投稿しよう！</h1>
+<div class ="container">
+  <h1 class="text-center font-weight-bolder"><%= @user.name %>のおすすめスポットを投稿しよう！</h1>
+  <%= form_with model: Spot.new do |f| %>
+    <div class ="row">
+      <div class="col-6 mt-3">
+        <div id='map'></div>
+        検索後地図でも位置調整ができるよ。<br>
+        <input id="address" type="textbox" placeholder="スポットを入力!">
+        <input type="button" value="検索" onclick="codeAddress()">
+        <%= f.hidden_field :lat,:value =>"緯度", id: :lat %>
+        <%= f.hidden_field :lng,:value =>"経度", id: :lng %>
+      </div>
 
-<%= form_with model: Spot.new do |f| %>
-
-
-  <div class="actions">
-    <h4>画像</h4>
-    <%= f.file_field :image_id, accept: "image/*" %>
-    <h4>タイトル</h4>
-    <%= f.text_field :title %>
-    <h4>詳細</h4>
-    <%= f.text_area :body %>
-    <%= f.label :tag_list,"タグを「,」で区切って入力してください" %>
-    <%= f.text_field :tag_list, value: @spot.tag_list.join(',') %>
-    <%= f.label :lat,"緯度" %>
-    <%= f.text_field :lat,:value =>"緯度", id: :lat %>
-    <%= f.label :lng,"経度" %>
-    <%= f.text_field :lng,:value =>"経度", id: :lng %>
-    <div  id="star">
-      <%= f.label :star,'評価 ', class:'col-md-3 col-form-label' %><br>
-      <%= f.hidden_field :star, id: :review_star %>
+      <div class="newspot-form col-6 mt-3 pl-5">
+        <h4>画像</h4>
+        <%= f.file_field :image_id, accept: "image/*" %>
+        <h4>タイトル</h4>
+        <%= f.text_field :title %>
+        <h4>詳細</h4>
+        <%= f.text_area :body %><br>
+        <%= f.label :tag_list,"タグ:「,」で区切ってね" %><br>
+        <%= f.text_field :tag_list, value: @spot.tag_list.join(','), placeholder: "例: グルメ,服" %><br>
+        <h4>評価</h4>
+        <div id="star">
+          <%= f.hidden_field :star, id: :review_star %>
+        </div>
+        <script>
+          $('#star').empty();
+          $('#star').raty({
+            size     : 36,
+            starOff:  '<%= asset_path('star-off.png') %>',
+            starOn : '<%= asset_path('star-on.png') %>',
+            scoreName: 'spot[star]',
+            half: false,
+          });
+        </script>
+      </div>
     </div>
 
-  <script>
-    $('#star').empty();
-    $('#star').raty({
-      size     : 36,
-      starOff:  '<%= asset_path('star-off.png') %>',
-      starOn : '<%= asset_path('star-on.png') %>',
-      scoreName: 'spot[star]',
-      half: false,
-    });
-  </script>
-  <!-- 評価javascript -->
-
-  <%= f.submit '添付デート', class: 'btn btn-sm btn-primary' %>
-  </div>
-
+    <div class="row text-center">
+      <div class="col-12 mb-2">
+        <%= f.submit '添付デート', class: 'btn btn-primary' %>
+      </div>
+    </div>
   <% end %>
-
-<h2>マップ</h2>
-<input id="address" type="textbox" placeholder="スポットを入力して下さい">
-<input type="button" value="検索" onclick="codeAddress()">
-<p>マーカーをドラック＆ドロップで位置の調整ができます。<p>
-<div id='map'></div>
+</div>
 
 <style>
 #map {

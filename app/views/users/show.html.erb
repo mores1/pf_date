@@ -1,56 +1,71 @@
 <div class="container-fluid">
-  <div class="row offset-md-2">
-    <h4 class="mb-4"><mark class="bg-light">マイページ</mark></h4>
-  </div>
-  <div class="form-group row ml-3">
-    <h4 class ="ml-3">
-      <strong>登録情報</strong>
-    </h4>
-    <table class="table table-bordered">
-      <tbody>
-        <tr>
-          <th>ユーザーネーム</th>
-          <th><%= @user.name %></th>
-        </tr>
-        <tr>
-          <th>Email</th>
-          <th><%= @user.email %></th>
-        </tr>
-      </tbody>
-    </table>
-    <div class="col-2 ml-4">
-      <%= link_to "編集する", edit_user_path(@user), class: "btn btn-success form-control"%>
+  <h1 class="text-center font-weight-bolder"><%= @user.name %>の部屋</h1>
+  <div class="row">
+    <div class="my-form">
+      <ul class="my-box">
+        <li>
+          通り名: <%= @user.name %>
+        </li>
+        <li>
+          Mail:<%= @user.email %>
+        </li>
+      </ul>
+      <div class="text-right">
+        <% if @user.name == "guestuser" %>
+          <%= link_to "新規登録へ", destroy_user_session_path, method: :delete, class: 'btn btn-success' %>
+        <% elsif @user == current_user || current_user.name == "admin" %>
+          <%= link_to "編集する", edit_user_path(@user), class: "btn btn-success" %>
+        <% end %>
+      </div>
     </div>
-  </div>
 
-  
-  <div class="spots d-flex flex-wrap align-content-stretch">
-      <% @spots.each do |spot| %>
-        <div class="spot-box card border-0 w-25 p-3 m-3 bg-warning">
-          <%= link_to spot_path(spot) do %>
-            <div class="card-body">
-                <p class="card-text text-dark"><%= spot.title %></p>
-            </div>
-            <%= image_tag spot.get_image_id, size: "100x100", class: "card-img" %>
-            <div class="card-body">
-              <p class="card-text text-dark">ユーザー名:<%= spot.user.name %></p>
-              <p class="card-text text-dark"><%= spot.body %></p>
-              <div id="star-rate<%= spot.id %>"></div>
-              <script>
-                $('#star-rate<%= spot.id %>').empty();
-                $('#star-rate<%= spot.id %>').raty({
-                  size      : 36,
-                  starOff:  '<%= asset_path('star-off.png') %>',
-                  starOn : '<%= asset_path('star-on.png') %>',
-                  half      : false,
-                  readOnly: true,
-                  score: <%= spot.star %>
-                });
-              </script>
-            </div>
-          <% end %>
+  </div>
+  <div class="row d-flex justify-content-center">
+    <% @plans.each do |plan| %>
+      <div class="plan-box card border-0 w-25 m-2">
+        <%= link_to plan_path(plan) do %>
+          <div class="card-body">
+            <h7 class="font-weight-bolder"><%= plan.title %></h7><br>
+            <p><%= plan.body %></p>
+            <p>by <%= plan.user.name %></p>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+  <div class ="row d-flex justify-content-center">
+    <% @spots.each do |spot| %>
+      <div class="spot-box card border-0 w-25 p-3 m-2">
+        <%= link_to spot_path(spot) do %>
+          <div class="card-body">
+            <p class="spot-title text-dark"><%= spot.title %></p>
+          </div>
+          <%= image_tag spot.get_image_id, size: "100x100", class: "card-img" %>
+          <div class="card-body">
+            <p class="card-text text-dark"><%= spot.body %></p>
+          </div>
+        <% end %>
+        <div class="card-body">
+          タグ<br>
+          <%= spot.tag_list %>
         </div>
-      <% end %>
-    </div>
-  
+        <div id="star-rate<%= spot.id %>"></div>
+        <script>
+          $('#star-rate<%= spot.id %>').empty();
+          $('#star-rate<%= spot.id %>').raty({
+            size      : 25,
+            starOff:  '<%= asset_path('star-off.png') %>',
+            starOn : '<%= asset_path('star-on.png') %>',
+            half      : false,
+            readOnly: true,
+            score: <%= spot.star %>
+            });
+        </script>
+        <p class="card-text text-dark">by <%= spot.user.name %></p>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+
 </div>

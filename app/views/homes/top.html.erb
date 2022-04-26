@@ -1,0 +1,19 @@
+<div class = "container top">
+ <div class = "top-text font-width-bolder">テンプデート</div>
+ <div class="row d-flex justify-content-bettween">
+  <div class="col-8 mt-5 tex-center">
+   <% if user_signed_in? %>
+    <%= link_to destroy_user_session_path, method: :delete, class: 'btn btn-danger font-width-bolder' do %>
+     Good Bye! <i class="fas fa-running"></i><i class="fas fa-door-closed"></i>
+    <% end %>
+   <% else %>
+    <%= link_to '登録なしで使う', users_guest_sign_in_path, class: "btn btn-secondary sign_in", method: :post %>
+    <p class="mt-2">投稿、閲覧などコメント以外をご利用になれます。</p>
+   <% end %>
+  </div>
+  <div class="postman">
+   <%= image_tag 'postman', size: "150x150"%>
+  </div>
+ </div>
+
+</div>
