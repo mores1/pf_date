@@ -7,7 +7,7 @@
           通り名: <%= @user.name %>
         </li>
         <li>
-          <% if @user == current_user %>
+          <% if @user == current_user || current_user.name == "admin" %>
             Mail:<%= @user.email %>
           <% end %>
         </li>
