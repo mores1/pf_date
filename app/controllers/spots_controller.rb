@@ -1,4 +1,5 @@
 class SpotsController < ApplicationController
+  
   def new
     @spot = Spot.new
     @user = current_user
@@ -7,7 +8,7 @@ class SpotsController < ApplicationController
   def create
     @spot = Spot.new(spot_params)
     @spot.user_id = current_user.id
-    if @spot.lat == 0 || @spot.lng == 0
+    if @spot.lat == 0 || @spot.lng == 0 #緯度経度が0(場所選択忘れの可能性大)の場合はじく。
       redirect_to request.referer
     elsif @spot.save
       redirect_to spots_path
@@ -28,7 +29,6 @@ class SpotsController < ApplicationController
     @spot = Spot.find(params[:id])
     @tags = @spot.tag_counts_on(:tags)
     @spot_comment = SpotComment.new
-
   end
 
   def edit
@@ -63,6 +63,5 @@ class SpotsController < ApplicationController
   def spot_params
     params.require(:spot).permit(:user_id, :title, :body, :lat, :lng, :star, :image_id, :tag_list)
   end
-
 
 end

@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
-  def index
+  
+  def index #管理者とゲストを除いく。
     @users = User.where.not(name: "admin").where.not(name: "guestuser").page(params[:page])
   end
 
@@ -13,18 +14,6 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
   end
 
-  def unsubscribe
-    @user = current_user
-
-  end
-
-  def withdrow
-    @user = current_user
-    @user.update(is_deleted: true)
-    reset_session
-    redirect_to root_path
-  end
-
   def update
     @user = User.find(params[:id])
     if @user.update(user_params)
@@ -32,6 +21,17 @@ class UsersController < ApplicationController
     else
       render :edit
     end
+  end
+
+  def unsubscribe
+    @user = current_user
+  end
+
+  def withdrow
+    @user = current_user
+    @user.update(is_deleted: true)
+    reset_session
+    redirect_to root_path
   end
 
   private

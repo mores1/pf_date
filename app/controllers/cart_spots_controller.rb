@@ -1,10 +1,9 @@
 class CartSpotsController < ApplicationController
 
-
   def create
     @cart_spot = CartSpot.new(cart_spot_params)
     @cart_spot.user_id = current_user.id
-    if current_user.cart_spots.find_by(spot_id: params[:cart_spot][:spot_id]).present?
+    if current_user.cart_spots.find_by(spot_id: params[:cart_spot][:spot_id]).present? #同一スポットの有無を確認し、プランでのスポット重複を防ぐ。
       redirect_to request.referer
     elsif
       @cart_spot.save
