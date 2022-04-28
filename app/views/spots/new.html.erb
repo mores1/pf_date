@@ -49,6 +49,7 @@
 #map {
   height: 350px;
   width: 350px;
+  
 }
 </style>
 
@@ -59,7 +60,7 @@ let marker
 function initMap(){
   geocoder = new google.maps.Geocoder()
 
-  map = new google.maps.Map(document.getElementById('map'), {
+map = new google.maps.Map(document.getElementById('map'), {
     center:  {lat: 35.6803997, lng:139.7690174},  //東京
     zoom: 15,
 
@@ -107,6 +108,6 @@ function codeAddress(){
 
 </script>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=<%= ENV['MAP_KEY'] %>&callback=initMap" async defer></script>
-
-
+<% content_for(:body_attributes) do %>
+    data-turbolinks="false"
+<% end %>
