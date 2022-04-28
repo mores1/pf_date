@@ -4,6 +4,25 @@ class SpotsController < ApplicationController
     @spot = Spot.new
     @user = current_user
   end
+  
+  def index
+    @spots = Spot.all.page(params[:page]).per(6)
+    @tags = Spot.tag_counts_on(:tags, limit: 10).order('count DESC')
+    if @tag = params[:tag]
+      @spot = Spot.tagged_with(params[:tag])
+    end
+  end
+  
+  def show
+    @spot = Spot.find(params[:id])
+    @tags = @spot.tag_counts_on(:tags)
+    @spot_comment = SpotComment.new
+  end
+  
+  def edit
+    @spot = Spot.find(params[:id])
+    @tags = @spot.tag_counts_on(:tags)
+  end
 
   def create
     @spot = Spot.new(spot_params)
@@ -16,26 +35,7 @@ class SpotsController < ApplicationController
       redirect_to request.referer
     end
   end
-
-  def index
-    @spots = Spot.all.page(params[:page]).per(6)
-    @tags = Spot.tag_counts_on(:tags, limit: 10).order('count DESC')
-    if @tag = params[:tag]
-      @spot = Spot.tagged_with(params[:tag])
-    end
-  end
-
-  def show
-    @spot = Spot.find(params[:id])
-    @tags = @spot.tag_counts_on(:tags)
-    @spot_comment = SpotComment.new
-  end
-
-  def edit
-    @spot = Spot.find(params[:id])
-    @tags = @spot.tag_counts_on(:tags)
-  end
-
+  
   def update
     @spot = Spot.find(params[:id])
     if @spot.update(spot_params)
@@ -54,7 +54,7 @@ class SpotsController < ApplicationController
     end
   end
 
-  def taglist
+  def taglist　#Gem'acts-as-taggable-on'でSpotのタグを多い順に取得。
     @tags = Spot.tag_counts_on(:tags).order('count DESC')
   end
 

@@ -14,7 +14,7 @@ Rails.application.routes.draw do
     get 'search' => 'spots#search'
   end
   
-  resources :cart_spots, only: [:create, :update, :destroy] do
+  resources :cart_spots, only: [:create, :destroy] do
     collection do
         delete 'destroy_all'
       end
