@@ -34,6 +34,27 @@ body{
   background-color: #faf68a;
   text-align: center;
   border-radius: 20px;
+  width: 290px;
+  height: 500px;
+}
+
+.spot-body{
+  height: 90px;
+  overflow-y: scroll;
+    &::-webkit-scrollbar {
+      width: 10px;
+    }
+ 
+    &::-webkit-scrollbar-thumb {
+      background: #ff8095;
+      border-radius: 5px;
+    }
+}
+
+
+.spot-body-tag{
+  height: 80px;
+  overflow: hidden;
 }
 
 
@@ -170,4 +191,9 @@ footer p {
 
 p.spot-title {
   font-weight: bold;
+}
+
+.card-img {
+  width: 250px;
+  height: 160px;
 }

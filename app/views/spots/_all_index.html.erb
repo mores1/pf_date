@@ -23,17 +23,21 @@
   </div>
   <div class ="row d-flex justify-content-center">
     <% spots.each do |spot| %>
-      <div class="spot-box card border-0 w-25 p-3 m-3">
+      <div class="spot-box card border-0 p-3 m-3">
         <%= link_to spot_path(spot) do %>
           <div class="card-body">
             <p class="spot-title text-dark"><%= spot.title %></p>
           </div>
-          <%= image_tag spot.get_image_id, size: "100x100", class: "card-img" %>
-          <div class="card-body">
+          <% if spot.image_id.attached? %>
+            <%= image_tag spot.image_id, class: "card-img" %>
+          <% else %>
+            <%= image_tag 'no_image.jpg', class: "card-img" %>
+          <% end %>
+          <div class="card-body spot-body">
             <p class="card-text text-dark"><%= spot.body %></p>
           </div>
         <% end %>
-        <div class="card-body">
+        <div class="card-body spot-body-tag">
           タグ<br>
           <%= spot.tag_list %>
         </div>
