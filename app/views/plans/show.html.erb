@@ -19,13 +19,17 @@
   </div>
   <div class="row d-flex justify-content-center">
     <% @spot_plans.each do |spot_plan| %>
-      <div class="spot-box card border-0 w-25 p-3 m-3">
+      <div class="spot-box card border-0 p-3 m-3">
         <%= link_to spot_path(spot_plan.spot) do %>
           <div class="card-body">
             <p class="spot-title text-dark"><%= spot_plan.spot.title %></p>
           </div>
-          <%= image_tag spot_plan.spot.get_image_id, size: "100x100", class: "card-img" %>
-          <div class="card-body">
+          <% if spot_plan.spot.image_id.attached? %>
+            <%= image_tag spot_plan.spot.image_id, class: "card-img" %>
+          <% else %>
+            <%= image_tag 'no_image.jpg', class: "card-img" %>
+          <% end %>
+          <div class="card-body spot-body">
             <p class="card-text text-dark"><%= spot_plan.spot.body %></p>
           </div>
         <% end %>
@@ -49,8 +53,8 @@
 
 <style>
   #map {
-    height: 500px;
-    width: 500px;
+    height: 350px;
+    width: 350px;
   }
 </style>
 

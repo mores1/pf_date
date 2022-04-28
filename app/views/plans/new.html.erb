@@ -21,15 +21,19 @@
   </div>
   <div class ="row d-flex justify-content-center">
     <% @cart_spots.each do |cart_spot| %>
-      <div class="spot-box card border-0 w-25 p-3 m-3">
+      <div class="spot-box card border-0 p-3 m-3">
         <%= link_to spot_path(cart_spot.spot) do %>
           <div class="card-body">
             <p class="spot-title text-dark"><%= cart_spot.spot.title %></p>
           </div>
-          <%= image_tag cart_spot.spot.get_image_id, size: "100x100", class: "card-img" %>
-          <div class="card-body">
-            <p class="card-text text-dark"><%= cart_spot.spot.body %></p>
-          </div>
+        <% if cart_spot.spot.image_id.attached? %>
+          <%= image_tag cart_spot.spot.image_id, class: "card-img" %>
+        <% else %>
+          <%= image_tag 'no_image.jpg', class: "card-img" %>
+        <% end %>
+        <div class="card-body spot-body">
+          <p class="card-text text-dark"><%= cart_spot.spot.body %></p>
+        </div>
         <% end %>
         <div id="star-rate<%= cart_spot.spot.id %>"></div>
         <script>
@@ -52,8 +56,8 @@
 
 <style>
   #map {
-    height: 500px;
-    width: 500px;
+    height: 350px;
+    width: 350px;
   }
 </style>
 

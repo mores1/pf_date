@@ -4,7 +4,7 @@
 
   <div class="row">
     <div class="col-4 mt-3">
-      <%= image_tag @spot.get_image_id, size: "300x300", class:'card-img' %>
+      <%= image_tag @spot.get_image_id, class:'card-img-show' %>
     </div>
     <div class="col-4 mt-3">
       <div id='map'></div>
@@ -16,7 +16,7 @@
 
     </div>
     <div class="col-4 mt-3">
-      <div class="spot-box card">
+      <div class="spot-box-show card">
         <div class="card-body">
           <h5 class="font-weight-bolder">詳細情報</h5>
           <%= @spot.body %><br>
@@ -101,8 +101,8 @@
 
     <style>
     #map {
-      height: 300px;
-      width: 300px;
+      height: 230px;
+      width: 230px;
     }
     </style>
 

@@ -1,26 +1,6 @@
 <div class ="container">
   <h1 class="text-center font-weight-bolder">みんなのスポット</h1>
-  <div class ="row d-flex justify-content-center">
-    <div id ='map'></div>
-    <div class ="tag-form">
-      <% if @tags.present? %>
-        <ul class = "spot-tag">
-          <% @tags.each do |tag| %>
-            <li>
-              <%= link_to spots_path(tag: tag.name) do %>
-                <i class="fas fa-tag"></i> <%= "#{tag.name}(#{tag.taggings_count})" %>
-              <% end %>
-            </li>
-            <% end %>
-            <li>
-              <%= link_to taglist_path do %>
-                <i class="fas fa-tags"></i> ぜんぶみる→
-              <% end %>
-            </li>
-        </ul>
-      <% end %>
-    </div>
-  </div>
+  <%= render 'tag', tags: @tags %>
   <div class ="row d-flex justify-content-center">
     <% spots.each do |spot| %>
       <div class="spot-box card border-0 p-3 m-3">

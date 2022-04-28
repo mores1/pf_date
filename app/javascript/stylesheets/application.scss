@@ -46,7 +46,7 @@ body{
     }
  
     &::-webkit-scrollbar-thumb {
-      background: #ff8095;
+      background: #ffd9f8;
       border-radius: 5px;
     }
 }
@@ -79,10 +79,6 @@ ul.spot-tag a {
 .show-tag a{
   color: #f163bf;
   border-radius: 15px;
-}
-
-.card-img{
-  border-radius: 20px;
 }
 
 #map{
@@ -196,4 +192,26 @@ p.spot-title {
 .card-img {
   width: 250px;
   height: 160px;
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ffa800;
+  border-radius: 5px;
+}
+
+.card-img-show{
+  width: 230px;
+  height: 230px;
+  border-radius: 20px;
+}
+
+.spot-box-show{
+  background-color: #faf68a;
+  text-align: center;
+  border-radius: 20px;
 }
