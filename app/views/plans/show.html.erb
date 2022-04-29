@@ -2,7 +2,9 @@
   <h1 class="text-center font-weight-bolder"><%= @plan.title %>詳細</h1>
   <h5 class="text-right font-weight-bolder">by <%= @plan.user.name %></h5>
   <div class="text-right mt-2">
-    <% if @plan.user == current_user || current_user.name == "admin" %>
+    <% if current_user.name == "guestuser" %>
+      <%= link_to "登録して他機能も使う", destroy_user_session_path, method: :delete, class: 'btn btn-secondary' %>
+    <% elsif @plan.user == current_user || current_user.name == "admin" %>
       <%= link_to "削除", plan_path(@plan), method: :delete, class: 'btn btn-danger' %>
     <% end %>
   </div>

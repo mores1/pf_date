@@ -88,9 +88,11 @@
         <% end %>
         </div>
         <div class="mt-2 mb-2">
-          <% if @spot.user == current_user || current_user.name == "admin"  %>
-          <%= link_to "編集", edit_spot_path(@spot), class: 'btn btn-success' %>
-          <%= link_to "削除", spot_path(@spot), method: :delete, class: 'btn btn-danger' %>
+          <% if current_user.name == "guestuser" %>
+            <%= link_to "登録して他機能も使う", destroy_user_session_path, method: :delete, class: 'btn btn-secondary' %>
+          <% elsif  @spot.user == current_user || current_user.name == "admin"  %>
+            <%= link_to "編集", edit_spot_path(@spot), class: 'btn btn-success' %>
+            <%= link_to "削除", spot_path(@spot), method: :delete, class: 'btn btn-danger' %>
           <% end %>
         </div>
       </div>
