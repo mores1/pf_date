@@ -54,7 +54,7 @@ class SpotsController < ApplicationController
     end
   end
 
-  def taglist　#Gem'acts-as-taggable-on'でSpotのタグを多い順に取得。
+  def taglist #Gem'acts-as-taggable-on'でSpotのタグを多い順に取得。
     @tags = Spot.tag_counts_on(:tags).order('count DESC')
   end
 

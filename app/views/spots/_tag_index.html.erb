@@ -1,6 +1,6 @@
 <div class="container">
   <h1 class="text-center font-weight-bolder"><%= @tag %>に関するスポット</h1>
-  <%= render 'tag', tags: @tags %>
+  <%= render 'narrow_tag', tags: @tags %>
   <div class ="row d-flex justify-content-center">
     <% spot.each do |spot| %>
       <div class="spot-box card border-0 p-3 m-3">
