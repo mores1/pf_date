@@ -2,7 +2,8 @@
   <% if @spot.present? %>
     <%= render 'tag_index', spot: @spot %>
   <% elsif @check.present? %>
-    <%= render 'search_index', search_spots: @search_spots %>
+    <!--%= render 'search_index', search_spots: @search_spots %>-->
+    <%= render 'search_plans', search_plans: @search_plans %>
   <% else %>
     <%= render 'all_index', spots: @spots %>
   <% end %>
