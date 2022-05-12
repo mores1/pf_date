@@ -40,27 +40,18 @@
 <input type="button" value="検索" onclick="codeAddress()">
 <p>マーカーをドラック＆ドロップで位置の調整ができます。<p>
 <div id='map'></div>
-
-
-
 <style>
     #map {
       height: 300px;
       width: 50%;
     }
-    </style>
-
-
-
+</style>
 <style>
 #map {
   height: 350px;
   width: 350px;
 }
 </style>
-
-
-
 
     <!-- js部分 -->
 <script>
@@ -81,8 +72,6 @@ function initMap(){
                 map: map
               });
 }
-
-
 //検索後のマップ作成
 let geocoder
 let aft
@@ -120,7 +109,5 @@ function codeAddress(){
       alert('該当する結果がありませんでした：' + status);
     }
   });
-}
-
 </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=<%= ENV['MAP_KEY'] %>&callback=initMap" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=<%= ENV['MAP_KEY'] %>&callback=initMap" async defer></script>
