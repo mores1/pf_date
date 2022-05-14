@@ -1,4 +1,5 @@
 <%= form_with model: @spot, method: :patch do |f| %>
+  <div id='map'></div>
   <div class="actions">
     <h4>画像</h4>
     <%= f.file_field :image_id, accept: "image/*" %>
@@ -37,75 +38,58 @@
 <input id="address" type="textbox" value="<%= @spot.title %>">
 <input type="button" value="検索" onclick="codeAddress()">
 <p>マーカーをドラック＆ドロップで位置の調整ができます。<p>
-<div id='map'></div>
-<style>
+
+    <style>
     #map {
-      height: 300px;
-      width: 50%;
+      height: 230px;
+      width: 230px;
     }
-</style>
-<style>
-#map {
-  height: 350px;
-  width: 350px;
-}
-</style>
+    </style>
 
     <!-- js部分 -->
-<script>
-//初期マップの設定
-let map
-let marker
-function initMap(){
-  geocoder = new google.maps.Geocoder()
+    <script>
+        function initMap() {
 
-  map = new google.maps.Map(document.getElementById('map'), {
-    center:  {lat: <%= @spot.lat %> , lng: <%= @spot.lng %> },  //東京
-    zoom: 15,
+          //初期表示位置(中心位置を登録マーカーに変更)
+          let latlng = new google.maps.LatLng(<%= @spot.lat %>, <%= @spot.lng %>);
+          //デザイン
+          let styles = [
+               {
+                stylers: [
+                 { "saturation": 0 },
+                 { "lightness": 0 }
+                ]
+               }
+              ];
 
-  });
-  let markerLatLng = new google.maps.LatLng({lat: <%= @spot.lat %>, lng: <%= @spot.lng %>}); // 緯度経度のデータ作成
+
+          let map = new google.maps.Map(document.getElementById('map'), {
+              zoom: 15,
+              styles: styles,
+              center: latlng
+          });
+          let transitLayer = new google.maps.TransitLayer();
+          transitLayer.setMap(map);
+
+          //複数マーカー ここから
+          // % @posts.each do |post|%>
+            ( function() {
+              let markerLatLng = new google.maps.LatLng({lat: <%= @spot.lat %>, lng: <%= @spot.lng %>}); // 緯度経度のデータ作成
               let marker = new google.maps.Marker({
                 position: markerLatLng,
                 map: map
               });
-}
-//検索後のマップ作成
-let geocoder
-let aft
-function codeAddress(){
-  let inputAddress = document.getElementById('address').value;
-  geocoder.geocode( { 'address': inputAddress}, function(results, status) {
-    if (status == 'OK') {
-        //マーカーが複数できないようにする
-        if (aft == true){
-            marker.setMap(null);
-        }
+        　　　//マーカーをクリックしたとき、詳細情報を表示
+              let infowindow = new google.maps.InfoWindow({
+                position: markerLatLng,
+                content: "<a target='_blank'><%= @spot.title %></a>"
+              }); //ここで詳細ページへのリンクを表示させる
+              marker.addListener('click', function() {
+                infowindow.open(map, marker);
+              });
 
-        //新しくマーカーを作成する
-        map.setCenter(results[0].geometry.location);
-            marker = new google.maps.Marker({
-            map: map,
-            position: results[0].geometry.location,
-            draggable: true // ドラッグ可能にする
-        });
-
-        //二度目以降か判断
-        aft = true
-
-        //検索した時に緯度経度を入力する
-        document.getElementById('lat').value = results[0].geometry.location.lat();
-        document.getElementById('lng').value = results[0].geometry.location.lng();
-
-        // マーカーのドロップ（ドラッグ終了）時のイベント
-        google.maps.event.addListener( marker, 'dragend', function(ev){
-            // イベントの引数evの、プロパティ.latLngが緯度経度
-            document.getElementById('lat').value = ev.latLng.lat();
-            document.getElementById('lng').value = ev.latLng.lng();
-        });
-    } else {
-      alert('該当する結果がありませんでした：' + status);
-    }
-  });
-</script>
-<script src="https://maps.googleapis.com/maps/api/js?key=<%= ENV['MAP_KEY'] %>&callback=initMap" async defer></script>
+           })();
+          // % end %>
+          //複数マーカー ここまで
+      }
+    </script>
