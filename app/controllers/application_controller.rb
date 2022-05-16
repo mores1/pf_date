@@ -6,9 +6,11 @@ class ApplicationController < ActionController::Base
 
   def set_search
     @q = { title_or_body_cont: params[:q] }
+    # @q = (params[:q]) 必ずプランを変更する事
     @search = Spot.ransack(@q)
-    @search_plans = Plan.ransack(@q)
     @search_spots = @search.result.order(created_at: :desc).page(params[:page])
+    @search_p = Plan.ransack(@q)
+    @search_plans = @search_p.result.order(created_at: :desc).page(params[:page])
     @check = params[:q] #タグ情報の有無確認時に使用する為、@check内に情報を代入。
   end
 
