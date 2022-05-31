@@ -134,7 +134,6 @@
           transitLayer.setMap(map);
 
           //複数マーカー ここから
-          // % @posts.each do |post|%>
             ( function() {
               let markerLatLng = new google.maps.LatLng({lat: <%= @spot.lat %>, lng: <%= @spot.lng %>}); // 緯度経度のデータ作成
               let marker = new google.maps.Marker({
